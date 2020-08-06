@@ -41,6 +41,13 @@ typedef struct {
 	char str[1]; /* cnt bytes */
 } LStr, * LStrPtr, ** LStrHandle;
 
+
+typedef struct {
+	int32_t cnt; /* number of bytes that follow */
+    int32_t padding;
+	int8_t str[1]; /* cnt bytes */
+} LV1DArray, * LV1DArrayPtr, ** LV1DArrayHandle;
+
 //---------------------------------------------------------------------
 // QueryServer LabVIEW definitions
 //---------------------------------------------------------------------
@@ -80,7 +87,8 @@ public:
     // Overrides
     Status Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response) override;
     Status Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) override; 
-    Status Register(ServerContext*context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer) override;
+    Status Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer) override;
+    Status PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response) override;
 
 private:
     LabVIEWQueryServerInstance* m_Instance;
@@ -95,6 +103,18 @@ public:
 
 public:
     int serverStartStatus;
+};
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+class FourProbeMeasurementData : public EventData
+{
+public:
+    FourProbeMeasurementData(ServerContext* context, const FourProbeRequest* request, FourProbeData* response);
+
+public:
+	const FourProbeRequest* request;
+	FourProbeData* response;
 };
 
 //---------------------------------------------------------------------
@@ -150,6 +170,34 @@ private:
 
 private:
     static void RunServer(string address, string serverCertificatePath, string serverKeyPath, LabVIEWQueryServerInstance* instance, ServerStartEventData* serverStarted);
+};
+
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct LVErrorOutData
+{
+  int errCode;
+  LStrHandle errMessage;
+};
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct LVFourProbeRawData
+{
+  float posVoltage;
+  float posCurrent;
+  float negVoltage;
+  float negCurrent;
+  float impedance;
+  LVErrorOutData error;
+};
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct LVFourProbeResponse
+{
+    LV1DArrayHandle results;
 };
 
 //---------------------------------------------------------------------

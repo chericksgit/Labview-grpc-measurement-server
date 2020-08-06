@@ -28,6 +28,17 @@ LabVIEWQueryServer::LabVIEWQueryServer(LabVIEWQueryServerInstance* instance)
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+Status LabVIEWQueryServer::PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response)
+{	
+    auto data = new FourProbeMeasurementData(context, request, response);
+    m_Instance->SendEvent("QueryServer_FourProbeMeasurement", data);
+    data->WaitForComplete();
+    delete data;
+    return Status::OK;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 Status LabVIEWQueryServer::Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response)
 {
     auto data = new InvokeData(context, request, response);

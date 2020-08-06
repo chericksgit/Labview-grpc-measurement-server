@@ -143,6 +143,28 @@ LIBRARY_EXPORT int32_t RegisterServerEvent(const char* name, LVUserEventRef* ite
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+LIBRARY_EXPORT int32_t FourProbeMeasurementSetResponse(LVgRPCid id, LVFourProbeResponse* response)
+{
+	FourProbeMeasurementData* data = *(FourProbeMeasurementData**)id;
+	LVFourProbeRawData* lvData = (LVFourProbeRawData*)((*response->results)->str);
+	for (int x=0; x < (*response->results)->cnt; ++x)
+	{
+		auto rawData = data->response->add_data();
+		rawData->set_posvoltage(lvData->posVoltage);
+		rawData->set_poscurrent(lvData->posCurrent);
+		rawData->set_negvoltage(lvData->negVoltage);
+		rawData->set_negcurrent(lvData->negCurrent);
+		rawData->set_impedance(lvData->impedance);
+		rawData->mutable_error()->set_errcode(lvData->error.errCode);
+		rawData->mutable_error()->set_errmessage(GetLVString(lvData->error.errMessage));
+		lvData += 1;
+	}
+	data->NotifyComplete();
+	return 0;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t InvokeGetRequest(LVgRPCid id, LVInvokeRequest* request)
 {
 	InvokeData* data = *(InvokeData**)id;

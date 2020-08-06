@@ -28,7 +28,7 @@ public:
     string Query(const string &command);
     unique_ptr<grpc::ClientReader<ServerEvent>> Register(const string& eventName);
 
-private:
+public:
     ClientContext m_context;
     unique_ptr<QueryServer::Stub> m_Stub;
 };
@@ -208,5 +208,19 @@ int main(int argc, char **argv)
         }
     }
     Status status = reader->Finish();
+
+    {
+        ClientContext ctx;
+        FourProbeRequest request;
+        FourProbeData data;
+        client.m_Stub->PerformFourProbeMeasurement(&ctx, request, &data);
+        auto measurements = data.data();
+        for (auto it = measurements.begin();  it != measurements.end(); ++it)
+        {
+            cout << "nagative voltage: " << (*it).negvoltage() << endl;
+            cout << "impedence: " << (*it).impedance() << endl;
+            cout << "Error code: " << (*it).error().errcode() << ", message: " << (*it).error().errmessage() << endl;
+        }
+    }
     cout << "Server notifications complete" << endl;
 }

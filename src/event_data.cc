@@ -40,6 +40,15 @@ ServerStartEventData::ServerStartEventData()
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+FourProbeMeasurementData::FourProbeMeasurementData(ServerContext* _context, const FourProbeRequest* _request, FourProbeData* _response)
+    : EventData(_context)
+{
+    request = _request;
+    response = _response;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 InvokeData::InvokeData(ServerContext* _context, const InvokeRequest* _request, InvokeResponse* _response)
     : EventData(_context)
 {

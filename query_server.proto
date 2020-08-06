@@ -38,7 +38,38 @@ service QueryServer {
   
   rpc Query (QueryRequest) returns (QueryResponse) {}
   
+  rpc PerformFourProbeMeasurement (FourProbeRequest) returns (FourProbeData) {}
+
   rpc Register (RegistrationRequest) returns (stream ServerEvent) {}
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+message FourProbeRaw {
+  float posVoltage = 1;
+  float posCurrent = 3;
+  float negVoltage = 2;
+  float negCurrent = 4;
+  float impedance = 5;
+  ErrorOut error = 6;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+message ErrorOut {
+  int32 errCode = 1;
+  string errMessage = 2;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+message FourProbeData {
+  repeated FourProbeRaw data = 1;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+message FourProbeRequest {
 }
 
 //---------------------------------------------------------------------
