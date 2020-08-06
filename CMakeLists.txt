@@ -37,25 +37,25 @@ endif()
 #----------------------------------------------------------------------
 # Proto file
 #----------------------------------------------------------------------
-get_filename_component(qs_proto "query_server.proto" ABSOLUTE)
-get_filename_component(qs_proto_path "${qs_proto}" PATH)
+get_filename_component(ms_proto "measurement_service.proto" ABSOLUTE)
+get_filename_component(ms_proto_path "${ms_proto}" PATH)
 
 #----------------------------------------------------------------------
 # Generated sources
 #----------------------------------------------------------------------
-set(qs_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/query_server.pb.cc")
-set(qs_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/query_server.pb.h")
-set(qs_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/query_server.grpc.pb.cc")
-set(qs_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/query_server.grpc.pb.h")
+set(ms_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/measurement_service.pb.cc")
+set(ms_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/measurement_service.pb.h")
+set(ms_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/measurement_service.grpc.pb.cc")
+set(ms_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/measurement_service.grpc.pb.h")
 add_custom_command(
-  OUTPUT "${qs_proto_srcs}" "${qs_proto_hdrs}" "${qs_grpc_srcs}" "${qs_grpc_hdrs}"
+  OUTPUT "${ms_proto_srcs}" "${ms_proto_hdrs}" "${ms_grpc_srcs}" "${ms_grpc_hdrs}"
   COMMAND ${_PROTOBUF_PROTOC}
   ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
     --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
-    -I "${qs_proto_path}"
+    -I "${ms_proto_path}"
     --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
-    "${qs_proto}"
-  DEPENDS "${qs_proto}")
+    "${ms_proto}"
+  DEPENDS "${ms_proto}")
 
 #----------------------------------------------------------------------
 # Include generated *.pb.h files
@@ -65,12 +65,12 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}" "./src")
 #----------------------------------------------------------------------
 # LabVIEW client support to connect to the query server
 #----------------------------------------------------------------------
-add_library(labview_query_client SHARED
-   "src/query_client.cc"
-   ${qs_proto_srcs}
-   ${qs_grpc_srcs}
+add_library(labview_measurement_client SHARED
+   "src/measurement_client.cc"
+   ${ms_proto_srcs}
+   ${ms_grpc_srcs}
    )
-target_link_libraries(labview_query_client
+target_link_libraries(labview_measurement_client
    ${_REFLECTION}
    ${_GRPC_GRPCPP}
    ${_PROTOBUF_LIBPROTOBUF})
@@ -78,14 +78,14 @@ target_link_libraries(labview_query_client
 #----------------------------------------------------------------------
 # LabVIEW server support for implementing the query server
 #----------------------------------------------------------------------
-add_library(labview_query_server SHARED
-  src/query_server.cc
+add_library(labview_measurement_server SHARED
+  src/measurement_server.cc
   src/server_interop.cc
   src/event_data.cc
-  ${qs_proto_srcs}
-  ${qs_grpc_srcs}
+  ${ms_proto_srcs}
+  ${ms_grpc_srcs}
   )
-target_link_libraries(labview_query_server
+target_link_libraries(labview_measurement_server
    ${_REFLECTION}
    ${_GRPC_GRPCPP}
    ${_PROTOBUF_LIBPROTOBUF})
@@ -95,8 +95,8 @@ target_link_libraries(labview_query_server
 #----------------------------------------------------------------------
 add_executable(example_client
   "src/example_client.cc"
-  ${qs_proto_srcs}
-  ${qs_grpc_srcs}
+  ${ms_proto_srcs}
+  ${ms_grpc_srcs}
   )
 target_link_libraries(example_client
    ${_REFLECTION}

@@ -21,18 +21,18 @@ syntax = "proto3";
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 option java_multiple_files = true;
-option java_package = "labview.queryserver";
-option java_outer_classname = "QueryServer";
-option objc_class_prefix = "LVQS";
+option java_package = "labview.measurementservice";
+option java_outer_classname = "MeasurementService";
+option objc_class_prefix = "LVMS";
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-package queryserver;
+package measurementservice;
 
 //---------------------------------------------------------------------
-// The QueryServer service definition.
+// The MeasurementService service definition.
 //---------------------------------------------------------------------
-service QueryServer {
+service MeasurementService {
   
   rpc Invoke (InvokeRequest) returns (InvokeResponse) {}
   

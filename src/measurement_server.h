@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 // Implementation objects for the LabVIEW implementation of the
-// gRPC QueryServer
+// gRPC MeasurementService
 //---------------------------------------------------------------------
 #pragma once
 
@@ -12,7 +12,7 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
-#include <query_server.grpc.pb.h>
+#include <measurement_service.grpc.pb.h>
 #include <condition_variable>
 
 using grpc::Server;
@@ -20,7 +20,7 @@ using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 using grpc::ServerWriter;
-using namespace queryserver;
+using namespace measurementservice;
 using namespace std;
 
 #ifdef _WIN32
@@ -49,7 +49,7 @@ typedef struct {
 } LV1DArray, * LV1DArrayPtr, ** LV1DArrayHandle;
 
 //---------------------------------------------------------------------
-// QueryServer LabVIEW definitions
+// LabVIEW definitions
 //---------------------------------------------------------------------
 typedef void* LVgRPCid;
 typedef void* LVgRPCServerid;
@@ -73,14 +73,14 @@ public:
     void NotifyComplete();
 };
 
-class LabVIEWQueryServerInstance;
+class LabVIEWMeasurementServerInstance;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-class LabVIEWQueryServer final : public queryserver::QueryServer::Service
+class LabVIEWMeasurementServer final : public measurementservice::MeasurementService::Service
 {
 public:
-    LabVIEWQueryServer(LabVIEWQueryServerInstance* instance);
+    LabVIEWMeasurementServer(LabVIEWMeasurementServerInstance* instance);
     void SopServer();
     void RegisterEvent(string eventName, LVUserEventRef reference);
 
@@ -91,7 +91,7 @@ public:
     Status PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response) override;
 
 private:
-    LabVIEWQueryServerInstance* m_Instance;
+    LabVIEWMeasurementServerInstance* m_Instance;
 };
 
 //---------------------------------------------------------------------
@@ -147,16 +147,16 @@ public:
 class RegistrationRequestData : public EventData
 {
 public:
-    RegistrationRequestData(ServerContext* context, const RegistrationRequest* request, ServerWriter<queryserver::ServerEvent>* writer);
+    RegistrationRequestData(ServerContext* context, const RegistrationRequest* request, ServerWriter<measurementservice::ServerEvent>* writer);
 
 public:
-    const queryserver::RegistrationRequest* request;
-    ::grpc::ServerWriter<::queryserver::ServerEvent>* eventWriter;
+    const measurementservice::RegistrationRequest* request;
+    ::grpc::ServerWriter<measurementservice::ServerEvent>* eventWriter;
 };
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-class LabVIEWQueryServerInstance
+class LabVIEWMeasurementServerInstance
 {
 public:
     int Run(string address, string serverCertificatePath, string serverKeyPath);
@@ -169,7 +169,7 @@ private:
     map<string, LVUserEventRef> m_RegisteredServerMethods;
 
 private:
-    static void RunServer(string address, string serverCertificatePath, string serverKeyPath, LabVIEWQueryServerInstance* instance, ServerStartEventData* serverStarted);
+    static void RunServer(string address, string serverCertificatePath, string serverKeyPath, LabVIEWMeasurementServerInstance* instance, ServerStartEventData* serverStarted);
 };
 
 

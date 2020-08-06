@@ -3,7 +3,7 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
-#include <query_server.grpc.pb.h>
+#include <measurement_service.grpc.pb.h>
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -14,7 +14,7 @@ using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 using namespace std;
-using namespace queryserver;
+using namespace measurementservice;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -30,13 +30,13 @@ public:
 
 public:
     ClientContext m_context;
-    unique_ptr<QueryServer::Stub> m_Stub;
+    unique_ptr<MeasurementService::Stub> m_Stub;
 };
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 QueryClient::QueryClient(shared_ptr<Channel> channel)
-    : m_Stub(QueryServer::NewStub(channel))
+    : m_Stub(MeasurementService::NewStub(channel))
 {        
 }
 

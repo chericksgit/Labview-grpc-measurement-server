@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-#include <query_server.h>
+#include <measurement_server.h>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -110,7 +110,7 @@ string GetLVString(LStrHandle lvString)
 LIBRARY_EXPORT int32_t LVCreateServer(LVgRPCServerid* id)
 {
 	InitCallbacks();
-	auto server = new LabVIEWQueryServerInstance();
+	auto server = new LabVIEWMeasurementServerInstance();
 	*id = server;   
 	return 0;
 }
@@ -119,7 +119,7 @@ LIBRARY_EXPORT int32_t LVCreateServer(LVgRPCServerid* id)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t LVStartServer(char* address, char* serverCertificatePath, char* serverKeyPath, LVgRPCServerid* id)
 {   
-	LabVIEWQueryServerInstance* server = *(LabVIEWQueryServerInstance**)id;
+	LabVIEWMeasurementServerInstance* server = *(LabVIEWMeasurementServerInstance**)id;
 	return server->Run(address, serverCertificatePath, serverKeyPath);
 }
 
@@ -127,7 +127,7 @@ LIBRARY_EXPORT int32_t LVStartServer(char* address, char* serverCertificatePath,
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t LVStopServer(LVgRPCServerid* id)
 {
-	LabVIEWQueryServerInstance* server = *(LabVIEWQueryServerInstance**)id;
+	LabVIEWMeasurementServerInstance* server = *(LabVIEWMeasurementServerInstance**)id;
 	server->StopServer();
 	return 0;
 }
@@ -136,7 +136,7 @@ LIBRARY_EXPORT int32_t LVStopServer(LVgRPCServerid* id)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t RegisterServerEvent(const char* name, LVUserEventRef* item, LVgRPCServerid* id)
 {
-	LabVIEWQueryServerInstance* server = *(LabVIEWQueryServerInstance**)id;
+	LabVIEWMeasurementServerInstance* server = *(LabVIEWMeasurementServerInstance**)id;
 	server->RegisterEvent(name, *item);
 	return 0;
 }
@@ -217,7 +217,7 @@ LIBRARY_EXPORT int32_t RegisterGetRequest(LVgRPCid id, LVRegistrationRequest* re
 LIBRARY_EXPORT int32_t NotifyServerEvent(LVgRPCid id, LVServerEvent* event)
 {
 	RegistrationRequestData* data = *(RegistrationRequestData**)id;
-    queryserver::ServerEvent e;
+    measurementservice::ServerEvent e;
     e.set_eventdata(GetLVString(event->eventData));
     e.set_serverid(event->serverId);
     e.set_status(event->status);

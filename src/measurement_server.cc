@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-#include <query_server.h>
+#include <measurement_server.h>
 #include <thread>
 #include <sstream>
 #include <fstream>
@@ -17,21 +17,21 @@ using grpc::ServerWriter;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 using namespace std;
-using namespace queryserver;
+using namespace measurementservice;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-LabVIEWQueryServer::LabVIEWQueryServer(LabVIEWQueryServerInstance* instance)
+LabVIEWMeasurementServer::LabVIEWMeasurementServer(LabVIEWMeasurementServerInstance* instance)
     : m_Instance(instance)
 {    
 }
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-Status LabVIEWQueryServer::PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response)
+Status LabVIEWMeasurementServer::PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response)
 {	
     auto data = new FourProbeMeasurementData(context, request, response);
-    m_Instance->SendEvent("QueryServer_FourProbeMeasurement", data);
+    m_Instance->SendEvent("MeasurementService_FourProbeMeasurement", data);
     data->WaitForComplete();
     delete data;
     return Status::OK;
@@ -39,10 +39,10 @@ Status LabVIEWQueryServer::PerformFourProbeMeasurement(ServerContext* context, c
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-Status LabVIEWQueryServer::Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response)
+Status LabVIEWMeasurementServer::Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response)
 {
     auto data = new InvokeData(context, request, response);
-    m_Instance->SendEvent("QueryServer_Invoke", data);
+    m_Instance->SendEvent("MeasurementService_Invoke", data);
     data->WaitForComplete();
     delete data;
     return Status::OK;
@@ -50,10 +50,10 @@ Status LabVIEWQueryServer::Invoke(ServerContext* context, const InvokeRequest* r
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-Status LabVIEWQueryServer::Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) 
+Status LabVIEWMeasurementServer::Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) 
 {
     auto data = new QueryData(context, request, response);
-    m_Instance->SendEvent("QueryServer_Query", data);
+    m_Instance->SendEvent("MeasurementService_Query", data);
     data->WaitForComplete();
     delete data;
     return Status::OK;
@@ -61,10 +61,10 @@ Status LabVIEWQueryServer::Query(ServerContext* context, const QueryRequest* req
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-Status LabVIEWQueryServer::Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer)
+Status LabVIEWMeasurementServer::Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer)
 {
     auto data = new RegistrationRequestData(context, request, writer);
-    m_Instance->SendEvent("QueryServer_Register", data);
+    m_Instance->SendEvent("MeasurementService_Register", data);
     data->WaitForComplete();
     delete data;
     return Status::OK;
@@ -72,14 +72,14 @@ Status LabVIEWQueryServer::Register(ServerContext* context, const RegistrationRe
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void LabVIEWQueryServerInstance::RegisterEvent(string name, LVUserEventRef item)
+void LabVIEWMeasurementServerInstance::RegisterEvent(string name, LVUserEventRef item)
 {    
 	m_RegisteredServerMethods.insert(pair<string,LVUserEventRef>(name, item));
 }
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void LabVIEWQueryServerInstance::SendEvent(string name, EventData* data)
+void LabVIEWMeasurementServerInstance::SendEvent(string name, EventData* data)
 {
 	auto occurrence = m_RegisteredServerMethods.find(name);
 	if (occurrence != m_RegisteredServerMethods.end())
@@ -90,7 +90,7 @@ void LabVIEWQueryServerInstance::SendEvent(string name, EventData* data)
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-int LabVIEWQueryServerInstance::Run(string address, string serverCertificatePath, string serverKeyPath)
+int LabVIEWMeasurementServerInstance::Run(string address, string serverCertificatePath, string serverKeyPath)
 {
 	ServerStartEventData serverStarted;
     new thread(RunServer, address, serverCertificatePath, serverKeyPath, this, &serverStarted);
@@ -117,11 +117,11 @@ std::string read_keycert( const std::string& filename)
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void LabVIEWQueryServerInstance::RunServer(
+void LabVIEWMeasurementServerInstance::RunServer(
 	string address, 
 	string serverCertificatePath, 
 	string serverKeyPath, 
-	LabVIEWQueryServerInstance* instance,
+	LabVIEWMeasurementServerInstance* instance,
 	ServerStartEventData* serverStarted)
 {
 	string server_address;
@@ -134,7 +134,7 @@ void LabVIEWQueryServerInstance::RunServer(
         server_address = "0.0.0.0:50051";
     }
 
-	LabVIEWQueryServer service(instance);
+	LabVIEWMeasurementServer service(instance);
 	grpc::EnableDefaultHealthCheckService(true);
 	grpc::reflection::InitProtoReflectionServerBuilderPlugin();
 	ServerBuilder builder;
@@ -183,7 +183,7 @@ void LabVIEWQueryServerInstance::RunServer(
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-void LabVIEWQueryServerInstance::StopServer()
+void LabVIEWMeasurementServerInstance::StopServer()
 {
 	if (m_Server != NULL)
 	{
