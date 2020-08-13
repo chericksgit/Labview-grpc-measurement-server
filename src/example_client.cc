@@ -202,25 +202,31 @@ int main(int argc, char **argv)
     {
         cout << "Server Event: " << event.eventdata() << endl;
         count += 1;
-        if (count == 10)
+        if (count == 5)
         {
             client.Invoke("Reset", "");
         }
     }
     Status status = reader->Finish();
+    cout << "Server notifications complete" << endl;
 
+    cout << "Performing 4 probe measurement" << endl;
     {
         ClientContext ctx;
         FourProbeRequest request;
         FourProbeData data;
         client.m_Stub->PerformFourProbeMeasurement(&ctx, request, &data);
         auto measurements = data.data();
+        cout << "Received " << measurements.size() << " measurements." << endl;
+        cout << "First Results: "  << endl;
+        int x=0;
         for (auto it = measurements.begin();  it != measurements.end(); ++it)
         {
-            cout << "nagative voltage: " << (*it).negvoltage() << endl;
-            cout << "impedence: " << (*it).impedance() << endl;
-            cout << "Error code: " << (*it).error().errcode() << ", message: " << (*it).error().errmessage() << endl;
+            cout << "  -V:" << (*it).negvoltage() << " +V:" << (*it).posvoltage() << " -C" << (*it).negcurrent() << " +C" << (*it).poscurrent() << " Z:" << (*it).impedance() << endl;
+            if (++x == 10)
+            {
+                break;
+            }
         }
     }
-    cout << "Server notifications complete" << endl;
 }
