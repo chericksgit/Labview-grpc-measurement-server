@@ -190,7 +190,8 @@ int main(int argc, char **argv)
     {
         creds = grpc::InsecureChannelCredentials();
     }
-    QueryClient client(grpc::CreateChannel(target_str, creds));
+    auto channel = grpc::CreateChannel(target_str, creds);
+    QueryClient client(channel);
 
     auto result = client.Query("Uptime");
     cout << "Server uptime: " << result << endl;
@@ -212,11 +213,15 @@ int main(int argc, char **argv)
 
     cout << "Performing 4 probe measurement" << endl;
     {
+        auto startTime = chrono::steady_clock::now();
         ClientContext ctx;
         FourProbeRequest request;
         FourProbeData data;
         client.m_Stub->PerformFourProbeMeasurement(&ctx, request, &data);
         auto measurements = data.data();
+        auto endTime = chrono::steady_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::seconds>(endTime - startTime);
+        cout << "4 probe measurement took: " << elapsed.count() << " seconds" << endl;
         cout << "Received " << measurements.size() << " measurements." << endl;
         cout << "First Results: "  << endl;
         int x=0;
