@@ -220,8 +220,8 @@ int main(int argc, char **argv)
         client.m_Stub->PerformFourProbeMeasurement(&ctx, request, &data);
         auto measurements = data.data();
         auto endTime = chrono::steady_clock::now();
-        auto elapsed = chrono::duration_cast<chrono::seconds>(endTime - startTime);
-        cout << "4 probe measurement took: " << elapsed.count() << " seconds" << endl;
+        auto elapsed = chrono::duration_cast<chrono::milliseconds>(endTime - startTime);
+        cout << "4 probe measurement took: " << elapsed.count() << " milliseconds" << endl;
         cout << "Received " << measurements.size() << " measurements." << endl;
         cout << "First Results: "  << endl;
         int x=0;
