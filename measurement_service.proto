@@ -40,7 +40,16 @@ service MeasurementService {
   
   rpc PerformFourProbeMeasurement (FourProbeRequest) returns (FourProbeData) {}
 
+  rpc StreamFourProbeMeasurement (FourProbeRequest) returns (stream FourProbeRaw) {}
+
   rpc Register (RegistrationRequest) returns (stream ServerEvent) {}
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+message ErrorOut {
+  int32 errCode = 1;
+  string errMessage = 2;
 }
 
 //---------------------------------------------------------------------
@@ -52,13 +61,6 @@ message FourProbeRaw {
   float negCurrent = 4;
   float impedance = 5;
   ErrorOut error = 6;
-}
-
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-message ErrorOut {
-  int32 errCode = 1;
-  string errMessage = 2;
 }
 
 //---------------------------------------------------------------------

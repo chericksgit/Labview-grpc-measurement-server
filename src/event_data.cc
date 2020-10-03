@@ -44,7 +44,18 @@ FourProbeMeasurementData::FourProbeMeasurementData(ServerContext* _context, cons
     : EventData(_context)
 {
     request = _request;
+    writer = nullptr;
     response = _response;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+FourProbeMeasurementData::FourProbeMeasurementData(ServerContext* _context, const FourProbeRequest* _request, ::grpc::ServerWriter<FourProbeRaw>* _writer)
+    : EventData(_context)
+{
+    request = _request;
+    writer = _writer;
+    response = nullptr;
 }
 
 //---------------------------------------------------------------------

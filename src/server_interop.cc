@@ -165,6 +165,34 @@ LIBRARY_EXPORT int32_t FourProbeMeasurementSetResponse(LVgRPCid id, LVFourProbeR
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+LIBRARY_EXPORT int32_t FourProbeMeasurementSetStreamResponse(LVgRPCid id, LVFourProbeRawData* response)
+{
+	FourProbeMeasurementData* measurementData = *(FourProbeMeasurementData**)id;
+
+	measurementservice::FourProbeRaw data;
+	data.set_posvoltage(response->posVoltage);
+	data.set_poscurrent(response->posCurrent);
+	data.set_negvoltage(response->negVoltage);
+	data.set_negcurrent(response->negCurrent);
+	data.set_impedance(response->impedance);
+	data.mutable_error()->set_errcode(response->error.errCode);
+	data.mutable_error()->set_errmessage(GetLVString(response->error.errMessage));
+
+	measurementData->writer->Write(data);
+	return 0;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+LIBRARY_EXPORT int32_t FourProbeMeasurementComplete(LVgRPCid id)
+{
+	FourProbeMeasurementData* measurementData = *(FourProbeMeasurementData**)id;
+	measurementData->NotifyComplete();
+	return 0;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t InvokeGetRequest(LVgRPCid id, LVInvokeRequest* request)
 {
 	InvokeData* data = *(InvokeData**)id;

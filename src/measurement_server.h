@@ -89,6 +89,7 @@ public:
     Status Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) override; 
     Status Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer) override;
     Status PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response) override;
+    Status StreamFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, ServerWriter<FourProbeRaw>* writer) override;
 
 private:
     LabVIEWMeasurementServerInstance* m_Instance;
@@ -110,10 +111,12 @@ public:
 class FourProbeMeasurementData : public EventData
 {
 public:
+    FourProbeMeasurementData(ServerContext* context, const FourProbeRequest* request, ServerWriter<FourProbeRaw>* writer);
     FourProbeMeasurementData(ServerContext* context, const FourProbeRequest* request, FourProbeData* response);
 
 public:
 	const FourProbeRequest* request;
+	grpc::ServerWriter<FourProbeRaw>* writer;
 	FourProbeData* response;
 };
 
@@ -151,7 +154,7 @@ public:
 
 public:
     const measurementservice::RegistrationRequest* request;
-    ::grpc::ServerWriter<measurementservice::ServerEvent>* eventWriter;
+    grpc::ServerWriter<measurementservice::ServerEvent>* eventWriter;
 };
 
 //---------------------------------------------------------------------

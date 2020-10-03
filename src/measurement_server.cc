@@ -39,6 +39,17 @@ Status LabVIEWMeasurementServer::PerformFourProbeMeasurement(ServerContext* cont
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+Status LabVIEWMeasurementServer::StreamFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, ServerWriter<FourProbeRaw>* writer)
+{	
+    auto data = new FourProbeMeasurementData(context, request, writer);
+    m_Instance->SendEvent("MeasurementService_StreamFourProbeMeasurement", data);
+    data->WaitForComplete();
+    delete data;
+    return Status::OK;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response)
 {
     auto data = new InvokeData(context, request, response);

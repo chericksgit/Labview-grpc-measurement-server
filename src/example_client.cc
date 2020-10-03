@@ -234,4 +234,25 @@ int main(int argc, char **argv)
             }
         }
     }
+    cout << "Performing Streaming 4 probe measurement" << endl;
+    {
+        auto startTime = chrono::steady_clock::now();
+        ClientContext ctx;
+        FourProbeRequest request;
+        FourProbeRaw data;
+        auto measurementReader = client.m_Stub->StreamFourProbeMeasurement(&ctx, request);
+        int x=0;
+        cout << "First Four Probe Results: "  << endl;
+        while (measurementReader->Read(&data))
+        {
+            if (++x <= 10)
+            {
+                cout << "  -V:" << data.negvoltage() << " +V:" << data.posvoltage() << " -C" << data.negcurrent() << " +C" << data.poscurrent() << " Z:" << data.impedance() << endl;
+            }
+        }
+        auto endTime = chrono::steady_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::milliseconds>(endTime - startTime);
+        cout << "4 probe measurement took: " << elapsed.count() << " milliseconds" << endl;
+        cout << "Received " << x << " measurements." << endl;
+    }
 }
