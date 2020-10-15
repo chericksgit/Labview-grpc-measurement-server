@@ -62,8 +62,9 @@ public:
     EventData(ServerContext* context);
 
 private:
-	mutex lockMutex;
-	condition_variable lock;
+    bool _isComplete;
+	mutex _lockMutex;
+	condition_variable _lock;
 
 public:
 	ServerContext* context;

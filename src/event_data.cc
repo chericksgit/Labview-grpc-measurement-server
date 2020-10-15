@@ -11,6 +11,7 @@ using namespace measurementservice;
 //---------------------------------------------------------------------
 EventData::EventData(ServerContext* _context)
 {
+    _isComplete = false;
     context = _context;    
 }
 
@@ -18,8 +19,12 @@ EventData::EventData(ServerContext* _context)
 //---------------------------------------------------------------------
 void EventData::WaitForComplete()
 {    
-    std::unique_lock<std::mutex> lck(lockMutex);
-    lock.wait(lck);
+    std::unique_lock<std::mutex> lck(_lockMutex);
+    if (_isComplete)    
+    {
+        return;
+    }
+    _lock.wait(lck);
 }
 
 //---------------------------------------------------------------------
@@ -27,8 +32,9 @@ void EventData::WaitForComplete()
 void EventData::NotifyComplete()
 {    
     cout << "EventData::NotifyComplete" << endl;
-	std::unique_lock<std::mutex> lck(lockMutex);
-	lock.notify_all();
+	std::unique_lock<std::mutex> lck(_lockMutex);
+    _isComplete = true;
+	_lock.notify_all();
 }
 
 //---------------------------------------------------------------------
