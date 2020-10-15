@@ -106,6 +106,10 @@ void LabVIEWMeasurementServerInstance::SendEvent(string name, EventData* data)
 	if (occurrence != m_RegisteredServerMethods.end())
 	{
 	    cout << "Sending method event to VI: " << name << endl;
+		if (occurrence->second == 0)
+		{
+			cout << "invalid occurrence reference" << endl;
+		}
 		OccurServerEvent(occurrence->second, data);
 	}
 	else

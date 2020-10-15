@@ -77,6 +77,10 @@ static void InitCallbacks()
 void OccurServerEvent(LVUserEventRef event, EventData* data)
 {
 	auto error = PostLVUserEvent(event, &data);
+	if (error != 0)
+	{
+		cout << "Failure posting user event: " << error << endl;
+	}
 }
 
 //---------------------------------------------------------------------
@@ -136,6 +140,7 @@ LIBRARY_EXPORT int32_t LVStopServer(LVgRPCServerid* id)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t RegisterServerEvent(const char* name, LVUserEventRef* item, LVgRPCServerid* id)
 {
+	cout << "RegisterServerEvent: " << name << "ref: " << *item << endl;
 	LabVIEWMeasurementServerInstance* server = *(LabVIEWMeasurementServerInstance**)id;
 	server->RegisterEvent(name, *item);
 	return 0;
@@ -145,6 +150,7 @@ LIBRARY_EXPORT int32_t RegisterServerEvent(const char* name, LVUserEventRef* ite
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t FourProbeMeasurementSetResponse(LVgRPCid id, LVFourProbeResponse* response)
 {
+	cout << "FourProbeMeasurementSetResponse" << endl;
 	FourProbeMeasurementData* data = *(FourProbeMeasurementData**)id;
 	LVFourProbeRawData* lvData = (LVFourProbeRawData*)((*response->results)->str);
 	for (int x=0; x < (*response->results)->cnt; ++x)
@@ -167,6 +173,7 @@ LIBRARY_EXPORT int32_t FourProbeMeasurementSetResponse(LVgRPCid id, LVFourProbeR
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t FourProbeMeasurementSetStreamResponse(LVgRPCid id, LVFourProbeRawData* response)
 {
+	cout << "FourProbeMeasurementSetStreamResponse" << endl;
 	FourProbeMeasurementData* measurementData = *(FourProbeMeasurementData**)id;
 
 	measurementservice::FourProbeRaw data;
@@ -186,6 +193,7 @@ LIBRARY_EXPORT int32_t FourProbeMeasurementSetStreamResponse(LVgRPCid id, LVFour
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t FourProbeMeasurementComplete(LVgRPCid id)
 {
+	cout << "FourProbeMeasurementComplete" << endl;
 	FourProbeMeasurementData* measurementData = *(FourProbeMeasurementData**)id;
 	measurementData->NotifyComplete();
 	return 0;
@@ -195,6 +203,7 @@ LIBRARY_EXPORT int32_t FourProbeMeasurementComplete(LVgRPCid id)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t InvokeGetRequest(LVgRPCid id, LVInvokeRequest* request)
 {
+	cout << "InvokeGetRequest" << endl;
 	InvokeData* data = *(InvokeData**)id;
     SetLVString(&request->command, data->request->command());
     SetLVString(&request->parameter, data->request->parameter());
@@ -205,6 +214,7 @@ LIBRARY_EXPORT int32_t InvokeGetRequest(LVgRPCid id, LVInvokeRequest* request)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t InvokeSetResponse(LVgRPCid id, LVInvokeResponse* response)
 {
+	cout << "InvokeSetResponse" << endl;
 	InvokeData* data = *(InvokeData**)id;
     data->response->set_status(response->status);
     data->NotifyComplete();
@@ -215,6 +225,7 @@ LIBRARY_EXPORT int32_t InvokeSetResponse(LVgRPCid id, LVInvokeResponse* response
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t QueryGetRequest(LVgRPCid id, LVQueryRequest* request)
 {
+	cout << "QueryGetRequest" << endl;
 	QueryData* data = *(QueryData**)id;
     SetLVString(&request->query, data->request->query());
     return 0;
@@ -224,6 +235,7 @@ LIBRARY_EXPORT int32_t QueryGetRequest(LVgRPCid id, LVQueryRequest* request)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t QuerySetResponse(LVgRPCid id, LVQueryResponse* response)
 {
+	cout << "QuerySetResponse" << endl;
 	QueryData* data = *(QueryData**)id;
     data->response->set_message(GetLVString(response->message));
     data->response->set_status(response->status);
@@ -235,6 +247,7 @@ LIBRARY_EXPORT int32_t QuerySetResponse(LVgRPCid id, LVQueryResponse* response)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t RegisterGetRequest(LVgRPCid id, LVRegistrationRequest* request)
 {
+	cout << "RegisterGetRequest" << endl;
 	RegistrationRequestData* data = *(RegistrationRequestData**)id;
     SetLVString(&request->eventName, data->request->eventname());
     return 0;
@@ -244,6 +257,7 @@ LIBRARY_EXPORT int32_t RegisterGetRequest(LVgRPCid id, LVRegistrationRequest* re
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t NotifyServerEvent(LVgRPCid id, LVServerEvent* event)
 {
+	cout << "NotifyServerEvent" << endl;
 	RegistrationRequestData* data = *(RegistrationRequestData**)id;
     measurementservice::ServerEvent e;
     e.set_eventdata(GetLVString(event->eventData));
@@ -257,6 +271,7 @@ LIBRARY_EXPORT int32_t NotifyServerEvent(LVgRPCid id, LVServerEvent* event)
 //---------------------------------------------------------------------
 LIBRARY_EXPORT int32_t CloseServerEvent(LVgRPCid id)
 {
+	cout << "CloseServerEvent" << endl;
 	RegistrationRequestData* data = *(RegistrationRequestData**)id;
     data->NotifyComplete();
     return 0;

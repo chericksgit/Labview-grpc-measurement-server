@@ -26,6 +26,7 @@ void EventData::WaitForComplete()
 //---------------------------------------------------------------------
 void EventData::NotifyComplete()
 {    
+    cout << "EventData::NotifyComplete" << endl;
 	std::unique_lock<std::mutex> lck(lockMutex);
 	lock.notify_all();
 }
