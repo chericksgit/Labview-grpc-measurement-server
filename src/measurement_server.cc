@@ -28,6 +28,17 @@ LabVIEWMeasurementServer::LabVIEWMeasurementServer(LabVIEWMeasurementServerInsta
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+Status LabVIEWMeasurementServer::SendConfig(ServerContext* context, const ConfigRequest* request, ConfigAck* response)
+{	
+    auto data = new SendConfigData(context, request, response);
+    m_Instance->SendEvent("MeasurementService_SendConfig", data);
+    data->WaitForComplete();
+    delete data;
+    return Status::OK;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response)
 {	
 	cout << "Incoming PerformFourProbeMeasurement call" << endl;

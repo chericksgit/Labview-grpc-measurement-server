@@ -47,6 +47,15 @@ ServerStartEventData::ServerStartEventData()
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+SendConfigData::SendConfigData(ServerContext* context, const ConfigRequest* request, ConfigAck* response)
+    : EventData(context)
+{
+    _request = request;
+    _response = response;    
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 FourProbeMeasurementData::FourProbeMeasurementData(ServerContext* _context, const FourProbeRequest* _request, FourProbeData* _response)
     : EventData(_context)
 {

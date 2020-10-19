@@ -196,6 +196,18 @@ int main(int argc, char **argv)
     auto result = client.Query("Uptime");
     cout << "Server uptime: " << result << endl;
 
+    {
+        ClientContext ctx;
+        ConfigRequest configRequest;
+        ConfigAck configResponse;
+
+        configRequest.set_smuresourcename("Test SMU Resource Name");
+        configRequest.set_applicationnumberofweldchannels(453);
+        cout << "Configuring measurement" << endl;
+        client.m_Stub->SendConfig(&ctx, configRequest, &configResponse);
+        cout << "Config sent: " << configResponse.acknowledge() << endl;
+    }
+
     auto reader = client.Register("Heartbeat");
     int count = 0;
     ServerEvent event;

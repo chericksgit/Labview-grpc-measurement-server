@@ -89,6 +89,7 @@ public:
     Status Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response) override;
     Status Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) override; 
     Status Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer) override;
+    Status SendConfig(ServerContext* context, const ConfigRequest* request, ConfigAck* response) override;
     Status PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response) override;
     Status StreamFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, ServerWriter<FourProbeRaw>* writer) override;
 
@@ -105,6 +106,18 @@ public:
 
 public:
     int serverStartStatus;
+};
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+class SendConfigData : public EventData
+{
+public:
+    SendConfigData(ServerContext* context, const ConfigRequest* request, ConfigAck* response);
+
+public:
+    const ConfigRequest* _request;
+    ConfigAck* _response;
 };
 
 //---------------------------------------------------------------------
@@ -184,6 +197,52 @@ struct LVErrorOutData
   int errCode;
   LStrHandle errMessage;
 };
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct LVConfigRequest
+{
+  LStrHandle SMUResourceName;
+  LStrHandle SMUChannels;
+  int32_t SMUSourceMode;
+  int32_t SMUOutputFunction;
+  int32_t SMUSourceTransientResponse;
+  float SMUCurrent;
+  float SMUCurrentLevelRange;
+  int32_t SMUMeasurementSense;
+  float SMUMeasurementApertureTime;
+  float SMUSourceAdvancedSourceDelay;
+  int32_t SMUVoltage;
+  int32_t SMUSourceAdvancedSequenceLoopCount;
+  int32_t SMUMeasurementAdvancedDCNoiseRejection;
+  LStrHandle SMUSequenceName;
+  int32_t SwitchNumber;
+  LStrHandle SwitchResourceName;
+  LStrHandle SwitchTopology;
+  LStrHandle ScanList;
+  LStrHandle DMMResourceName;
+  int32_t DMMFunction;
+  float DMMResolution;
+  float DMMRange;
+  int32_t DMMSampleCount;
+  int32_t DMMApertureTimeUnit;
+  float_t DMMApertureTime;
+  int32_t DMMNumberOfAverages;
+  int32_t DMMAutoZero;
+  int32_t DMMADCCalibration;
+  float DMMSettleTime;
+  int32_t DMMControlAction;
+  int32_t DMMVoltageFaultUpperLimit;
+  int32_t ApplicationNumberOfWeldChannels;
+};
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+struct LVConfigAck
+{
+  bool acknowledge;
+};
+
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
