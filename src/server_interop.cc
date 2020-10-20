@@ -165,9 +165,6 @@ LIBRARY_EXPORT int32_t SetConfigGetRequest(LVgRPCid id, LVConfigRequest* request
 	request->SMUSourceAdvancedSequenceLoopCount = data->_request->smusourceadvancedsequenceloopcount();
 	request->SMUMeasurementAdvancedDCNoiseRejection = data->_request->smumeasurementadvanceddcnoiserejection();
   	SetLVString(&request->SMUSequenceName, data->_request->smusequencename());
-  	request->SwitchNumber = data->_request->switchnumber();
-  	SetLVString(&request->SwitchResourceName, data->_request->switchresourcename());
-  	SetLVString(&request->SwitchTopology, data->_request->switchtopology());
   	SetLVString(&request->ScanList, data->_request->scanlist());
   	SetLVString(&request->DMMResourceName, data->_request->dmmresourcename());
 	request->DMMFunction = data->_request->dmmfunction();

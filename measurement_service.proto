@@ -116,41 +116,36 @@ message ServerEvent {
   int32 status = 3;
 }
 
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
 message ConfigRequest {
-  string SMUResourceName = 1;
-  string SMUChannels = 2;
-  int32 SMUSourceMode = 3;
-  int32 SMUOutputFunction = 4;
-  int32 SMUSourceTransientResponse = 5;
-  float SMUCurrent = 6;
-  float SMUCurrentLevelRange = 7;
-  int32 SMUMeasurementSense = 8;
-  float SMUMeasurementApertureTime = 9;
-  float SMUSourceAdvancedSourceDelay = 10;
-  int32 SMUVoltage = 11;
-  int32 SMUSourceAdvancedSequenceLoopCount = 12;
-  int32 SMUMeasurementAdvancedDCNoiseRejection = 13;
-  string SMUSequenceName = 14;
-  int32 SwitchNumber = 15;
-  string SwitchResourceName = 16;
-  string SwitchTopology = 17;
-  string ScanList = 18;
-  string DMMResourceName = 19;
-  int32 DMMFunction = 20;
-  float DMMResolution = 21;
-  float DMMRange = 22;
-  int32 DMMSampleCount = 23;
-  int32 DMMApertureTimeUnit = 24;
-  float DMMApertureTime = 25;
-  int32 DMMNumberOfAverages = 26;
-  int32 DMMAutoZero = 27;
-  int32 DMMADCCalibration = 28;
-  float DMMSettleTime = 29;
-  int32 DMMControlAction = 30;
-  int32 DMMVoltageFaultUpperLimit = 31;
-  int32 ApplicationNumberOfWeldChannels = 32;
+  string SMUResourceName                        = 1;
+  string SMUChannels                            = 2;
+  int32  SMUSourceMode                          = 3;
+  int32  SMUOutputFunction                      = 4;
+  int32  SMUSourceTransientResponse             = 5;
+  float  SMUCurrent                             = 6;
+  float  SMUCurrentLevelRange                   = 7;
+  int32  SMUMeasurementSense                    = 8;
+  float  SMUMeasurementApertureTime             = 9;
+  float  SMUSourceAdvancedSourceDelay           = 10;
+  float  SMUVoltage                             = 11;
+  int32  SMUSourceAdvancedSequenceLoopCount     = 12;
+  int32  SMUMeasurementAdvancedDCNoiseRejection = 13;
+  string SMUSequenceName                        = 14;
+  string ScanList                               = 15;
+  string DMMResourceName                        = 16;
+  int32  DMMFunction                            = 17;
+  float  DMMResolution                          = 18;
+  float  DMMRange                               = 19;
+  int32  DMMSampleCount                         = 20;
+  int32  DMMApertureTimeUnit                    = 21;
+  float  DMMApertureTime                        = 22;
+  int32  DMMNumberOfAverages                    = 23;
+  int32  DMMAutoZero                            = 24;
+  int32  DMMADCCalibration                      = 25;
+  float  DMMSettleTime                          = 26;
+  int32  DMMControlAction                       = 27;
+  float  DMMVoltageFaultUpperLimit              = 28;
+  int32  ApplicationNumberOfWeldChannels        = 29;
 }
 
 //---------------------------------------------------------------------

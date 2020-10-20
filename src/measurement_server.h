@@ -216,9 +216,6 @@ struct LVConfigRequest
   int32_t SMUSourceAdvancedSequenceLoopCount;
   int32_t SMUMeasurementAdvancedDCNoiseRejection;
   LStrHandle SMUSequenceName;
-  int32_t SwitchNumber;
-  LStrHandle SwitchResourceName;
-  LStrHandle SwitchTopology;
   LStrHandle ScanList;
   LStrHandle DMMResourceName;
   int32_t DMMFunction;
