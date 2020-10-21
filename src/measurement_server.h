@@ -44,7 +44,9 @@ typedef struct {
 
 typedef struct {
 	int32_t cnt; /* number of bytes that follow */
+#ifndef _X86
     int32_t padding;
+#endif
 	int8_t str[1]; /* cnt bytes */
 } LV1DArray, * LV1DArrayPtr, ** LV1DArrayHandle;
 
