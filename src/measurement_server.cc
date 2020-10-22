@@ -41,12 +41,10 @@ Status LabVIEWMeasurementServer::SendConfig(ServerContext* context, const Config
 //---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response)
 {	
-	cout << "Incoming PerformFourProbeMeasurement call" << endl;
     auto data = new FourProbeMeasurementData(context, request, response);
     m_Instance->SendEvent("MeasurementService_FourProbeMeasurement", data);
     data->WaitForComplete();
     delete data;
-	cout << "Event Complete" << endl;
     return Status::OK;
 }
 
@@ -54,12 +52,10 @@ Status LabVIEWMeasurementServer::PerformFourProbeMeasurement(ServerContext* cont
 //---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::StreamFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, ServerWriter<FourProbeRaw>* writer)
 {	
-	cout << "Incoming StreamFourProbeMeasurement call" << endl;
     auto data = new FourProbeMeasurementData(context, request, writer);
     m_Instance->SendEvent("MeasurementService_StreamFourProbeMeasurement", data);
     data->WaitForComplete();
     delete data;
-	cout << "Event Complete" << endl;
     return Status::OK;
 }
 
@@ -67,12 +63,10 @@ Status LabVIEWMeasurementServer::StreamFourProbeMeasurement(ServerContext* conte
 //---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response)
 {
-	cout << "Incoming Invoke call" << endl;
     auto data = new InvokeData(context, request, response);
     m_Instance->SendEvent("MeasurementService_Invoke", data);
     data->WaitForComplete();
     delete data;
-	cout << "Event Complete" << endl;
     return Status::OK;
 }
 
@@ -80,12 +74,21 @@ Status LabVIEWMeasurementServer::Invoke(ServerContext* context, const InvokeRequ
 //---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) 
 {
-	cout << "Incoming Query call" << endl;
     auto data = new QueryData(context, request, response);
     m_Instance->SendEvent("MeasurementService_Query", data);
     data->WaitForComplete();
     delete data;
-	cout << "Event Complete" << endl;
+    return Status::OK;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+Status LabVIEWMeasurementServer::StreamError(ServerContext* context, const ErrorRequest* request, ServerWriter<ErrorOut>* writer)
+{
+	auto data = new StreamErrorData(context, request, writer);	
+    m_Instance->SendEvent("MeasurementService_StreamError", data);
+    data->WaitForComplete();
+    delete data;
     return Status::OK;
 }
 
@@ -93,12 +96,10 @@ Status LabVIEWMeasurementServer::Query(ServerContext* context, const QueryReques
 //---------------------------------------------------------------------
 Status LabVIEWMeasurementServer::Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer)
 {
-	cout << "Incoming Register call" << endl;
     auto data = new RegistrationRequestData(context, request, writer);
     m_Instance->SendEvent("MeasurementService_Register", data);
     data->WaitForComplete();
     delete data;
-	cout << "Event Complete" << endl;
     return Status::OK;
 }
 
@@ -116,7 +117,6 @@ void LabVIEWMeasurementServerInstance::SendEvent(string name, EventData* data)
 	auto occurrence = m_RegisteredServerMethods.find(name);
 	if (occurrence != m_RegisteredServerMethods.end())
 	{
-	    cout << "Sending method event to VI: " << name << endl;
 		if (occurrence->second == 0)
 		{
 			cout << "invalid occurrence reference" << endl;

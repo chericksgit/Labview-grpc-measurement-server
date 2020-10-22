@@ -91,6 +91,7 @@ public:
     Status Invoke(ServerContext* context, const InvokeRequest* request, InvokeResponse* response) override;
     Status Query(ServerContext* context, const QueryRequest* request, QueryResponse* response) override; 
     Status Register(ServerContext* context, const RegistrationRequest* request, ServerWriter<ServerEvent>* writer) override;
+    Status StreamError(ServerContext* context, const ErrorRequest* request, ServerWriter<ErrorOut>* writer) override;
     Status SendConfig(ServerContext* context, const ConfigRequest* request, ConfigAck* response) override;
     Status PerformFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, FourProbeData* response) override;
     Status StreamFourProbeMeasurement(ServerContext* context, const FourProbeRequest* request, ServerWriter<FourProbeRaw>* writer) override;
@@ -108,6 +109,18 @@ public:
 
 public:
     int serverStartStatus;
+};
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+class StreamErrorData : public EventData
+{
+public:
+    StreamErrorData(ServerContext* context, const ErrorRequest* request, ServerWriter<ErrorOut>* writer);
+
+public:
+    const ErrorRequest* _request;
+    ServerWriter<ErrorOut>* _writer;
 };
 
 //---------------------------------------------------------------------
@@ -247,11 +260,11 @@ struct LVConfigAck
 //---------------------------------------------------------------------
 struct LVFourProbeRawData
 {
-  float posVoltage;
-  float posCurrent;
-  float negVoltage;
-  float negCurrent;
-  float impedance;
+  double posVoltage;
+  double posCurrent;
+  double negVoltage;
+  double negCurrent;
+  double impedance;
   LVErrorOutData error;
 };
 

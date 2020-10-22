@@ -47,6 +47,15 @@ ServerStartEventData::ServerStartEventData()
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+StreamErrorData::StreamErrorData(ServerContext* context, const ErrorRequest* request, ServerWriter<ErrorOut>* writer)
+    : EventData(context)
+{
+    _request = request;
+    _writer = writer;
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 SendConfigData::SendConfigData(ServerContext* context, const ConfigRequest* request, ConfigAck* response)
     : EventData(context)
 {

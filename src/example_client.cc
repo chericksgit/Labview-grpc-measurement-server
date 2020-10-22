@@ -208,20 +208,34 @@ int main(int argc, char **argv)
         cout << "Config sent: " << configResponse.acknowledge() << endl;
     }
 
-    auto reader = client.Register("Heartbeat");
-    int count = 0;
-    ServerEvent event;
-    while (reader->Read(&event))
     {
-        cout << "Server Event: " << event.eventdata() << endl;
-        count += 1;
-        if (count == 5)
+        auto reader = client.Register("Heartbeat");
+        int count = 0;
+        ServerEvent event;
+        while (reader->Read(&event))
         {
-            client.Invoke("Reset", "");
+            cout << "Server Event: " << event.eventdata() << endl;
+            count += 1;
+            if (count == 5)
+            {
+                client.Invoke("Reset", "");
+            }
         }
+        Status status = reader->Finish();
+        cout << "Server notifications complete" << endl;
     }
-    Status status = reader->Finish();
-    cout << "Server notifications complete" << endl;
+
+    {
+        ClientContext ctx;
+        ErrorOut error;
+        auto reader = client.m_Stub->StreamError(&ctx, ErrorRequest());
+        while (reader->Read(&error))
+        {
+            cout << "Server Error: " << error.errmessage() << ", " << error.errcode() << endl;
+        }
+        Status status = reader->Finish();
+        cout << "Server error test complete" << endl;
+    }
 
     cout << "Performing 4 probe measurement" << endl;
     {
