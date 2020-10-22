@@ -10,11 +10,12 @@ else()
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-if(NOT CMAKE_CL_64)
-  add_definitions(-D_X86)
-endif()
+project(check_for_sizeof_void_p C)
+message( ${CMAKE_SIZEOF_VOID_P} )
 
 project(labview-query-server C CXX)
+
+add_definitions(-D_PS_${CMAKE_SIZEOF_VOID_P})
 
 find_package(Threads REQUIRED)
 

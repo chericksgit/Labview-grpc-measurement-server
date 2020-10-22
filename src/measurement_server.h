@@ -44,7 +44,7 @@ typedef struct {
 
 typedef struct {
 	int32_t cnt; /* number of bytes that follow */
-#ifndef _X86
+#ifndef _PS_4
     int32_t padding;
 #endif
 	int8_t str[1]; /* cnt bytes */
@@ -225,7 +225,7 @@ struct LVConfigRequest
   float DMMRange;
   int32_t DMMSampleCount;
   int32_t DMMApertureTimeUnit;
-  float_t DMMApertureTime;
+  float DMMApertureTime;
   int32_t DMMNumberOfAverages;
   int32_t DMMAutoZero;
   int32_t DMMADCCalibration;
