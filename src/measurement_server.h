@@ -227,7 +227,7 @@ struct LVConfigRequest
   int32_t SMUMeasurementSense;
   float SMUMeasurementApertureTime;
   float SMUSourceAdvancedSourceDelay;
-  int32_t SMUVoltage;
+  float SMUVoltage;
   int32_t SMUSourceAdvancedSequenceLoopCount;
   int32_t SMUMeasurementAdvancedDCNoiseRejection;
   LStrHandle SMUSequenceName;
@@ -244,7 +244,7 @@ struct LVConfigRequest
   int32_t DMMADCCalibration;
   float DMMSettleTime;
   int32_t DMMControlAction;
-  int32_t DMMVoltageFaultUpperLimit;
+  float DMMVoltageFaultUpperLimit;
   int32_t ApplicationNumberOfWeldChannels;
 };
 

@@ -202,6 +202,8 @@ int main(int argc, char **argv)
         ConfigAck configResponse;
 
         configRequest.set_smuresourcename("Test SMU Resource Name");
+        configRequest.set_smuvoltage(3.14);
+        configRequest.set_dmmvoltagefaultupperlimit(5.67);
         configRequest.set_applicationnumberofweldchannels(453);
         cout << "Configuring measurement" << endl;
         client.m_Stub->SendConfig(&ctx, configRequest, &configResponse);
