@@ -1,7 +1,6 @@
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 #include <measurement_server.h>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <map>
@@ -229,8 +228,12 @@ LIBRARY_EXPORT int32_t FourProbeMeasurementSetStreamResponse(LVgRPCid id, LVFour
 	data.mutable_error()->set_errcode(response->error.errCode);
 	data.mutable_error()->set_errmessage(GetLVString(response->error.errMessage));
 
-	measurementData->writer->Write(data);
-	return 0;
+	auto success = measurementData->writer->Write(data);
+	if (success)
+	{
+    	return 0;
+	}
+	return -1;
 }
 
 //---------------------------------------------------------------------
@@ -300,8 +303,12 @@ LIBRARY_EXPORT int32_t NotifyServerEvent(LVgRPCid id, LVServerEvent* event)
     e.set_eventdata(GetLVString(event->eventData));
     e.set_serverid(event->serverId);
     e.set_status(event->status);
-    data->eventWriter->Write(e);
-    return 0;
+    auto success = data->eventWriter->Write(e);
+	if (success)
+	{
+    	return 0;
+	}
+	return -1;
 }
 
 //---------------------------------------------------------------------
@@ -312,8 +319,12 @@ LIBRARY_EXPORT int32_t NotifyError(LVgRPCid id, LVErrorOutData* error)
     measurementservice::ErrorOut e;
 	e.set_errcode(error->errCode);
 	e.set_errmessage(GetLVString(error->errMessage));
-    data->_writer->Write(e);
-    return 0;
+    auto success = data->_writer->Write(e);
+	if (success)
+	{
+    	return 0;
+	}
+	return -1;
 }
 
 //---------------------------------------------------------------------
