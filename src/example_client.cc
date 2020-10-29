@@ -201,14 +201,41 @@ int main(int argc, char **argv)
         ConfigRequest configRequest;
         ConfigAck configResponse;
 
-        configRequest.set_smuresourcename("Test SMU Resource Name");
-        configRequest.set_smuvoltage(3.14);
-        configRequest.set_dmmvoltagefaultupperlimit(5.67);
-        configRequest.set_applicationnumberofweldchannels(453);
+        configRequest.set_smuresourcename("SMU");
+		configRequest.set_smuchannels("0");
+		configRequest.set_smusourcemode(1021);
+		configRequest.set_smuoutputfunction(1007);
+		configRequest.set_smusourcetransientresponse(1039);
+		configRequest.set_smucurrent(1.0);
+		configRequest.set_smucurrentlevelrange(1.0);
+		configRequest.set_smumeasurementsense(1008);
+		configRequest.set_smumeasurementaperturetime(0.010);
+		configRequest.set_smusourceadvancedsourcedelay(0.000100);
+		configRequest.set_smuvoltage(6);
+		configRequest.set_smusourceadvancedsequenceloopcount(20);
+		configRequest.set_smumeasurementadvanceddcnoiserejection(1044);
+		configRequest.set_smusequencename("MySequence");
+		configRequest.set_scanlist("SCANALL");
+		configRequest.set_dmmresourcename("DMM");
+		configRequest.set_dmmfunction(0);
+		configRequest.set_dmmresolution(0.1);
+		configRequest.set_dmmrange(0.1);
+		configRequest.set_dmmsamplecount(0);
+		configRequest.set_dmmaperturetimeunit(0);
+		configRequest.set_dmmaperturetime(0.010);
+		configRequest.set_dmmnumberofaverages(1);
+		configRequest.set_dmmautozero(0);
+		configRequest.set_dmmadccalibration(0);
+		configRequest.set_dmmsettletime(0.0001);
+		configRequest.set_dmmcontrolaction(0);
+        configRequest.set_dmmvoltagefaultupperlimit(0.000100);
+        configRequest.set_applicationnumberofweldchannels(7);
         cout << "Configuring measurement" << endl;
         client.m_Stub->SendConfig(&ctx, configRequest, &configResponse);
         cout << "Config sent: " << configResponse.acknowledge() << endl;
     }
+
+//        client.Invoke("Restore JSON", "");
 
     {
         auto reader = client.Register("Heartbeat");
@@ -227,17 +254,17 @@ int main(int argc, char **argv)
         cout << "Server notifications complete" << endl;
     }
 
-    {
-        ClientContext ctx;
-        ErrorOut error;
-        auto reader = client.m_Stub->StreamError(&ctx, ErrorRequest());
-        while (reader->Read(&error))
-        {
-            cout << "Server Error: " << error.errmessage() << ", " << error.errcode() << endl;
-        }
-        Status status = reader->Finish();
-        cout << "Server error test complete" << endl;
-    }
+//    {
+//        ClientContext ctx;
+//        ErrorOut error;
+//        auto reader = client.m_Stub->StreamError(&ctx, ErrorRequest());
+//        while (reader->Read(&error))
+//        {
+//            cout << "Server Error: " << error.errmessage() << ", " << error.errcode() << endl;
+//        }
+//        Status status = reader->Finish();
+//        cout << "Server error test complete" << endl;
+//    }
 
     cout << "Performing 4 probe measurement" << endl;
     {
@@ -256,7 +283,7 @@ int main(int argc, char **argv)
         for (auto it = measurements.begin();  it != measurements.end(); ++it)
         {
             cout << "  -V:" << (*it).negvoltage() << " +V:" << (*it).posvoltage() << " -C" << (*it).negcurrent() << " +C" << (*it).poscurrent() << " Z:" << (*it).impedance() << endl;
-            if (++x == 10)
+            if (++x == 20)
             {
                 break;
             }
@@ -273,7 +300,7 @@ int main(int argc, char **argv)
         cout << "First Four Probe Results: "  << endl;
         while (measurementReader->Read(&data))
         {
-            if (++x <= 10)
+            if (++x <= 20)
             {
                 cout << "  -V:" << data.negvoltage() << " +V:" << data.posvoltage() << " -C" << data.negcurrent() << " +C" << data.poscurrent() << " Z:" << data.impedance() << endl;
             }

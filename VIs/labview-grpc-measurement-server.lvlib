@@ -51,4 +51,5 @@
 	<Item Name="MeasurementServer_GetRequest_Config.vi" Type="VI" URL="../MeasurementServer_GetRequest_Config.vi"/>
 	<Item Name="MeasurementServer_SetResponse_Config.vi" Type="VI" URL="../MeasurementServer_SetResponse_Config.vi"/>
 	<Item Name="MeasurementServer_Stream_Error.vi" Type="VI" URL="../MeasurementServer_Stream_Error.vi"/>
+	<Item Name="MeasurementServer_DetermineLibrary.vi" Type="VI" URL="../MeasurementServer_DetermineLibrary.vi"/>
 </Library>
