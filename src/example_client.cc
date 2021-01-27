@@ -282,5 +282,24 @@ int main(int argc, char **argv)
         auto elapsed = chrono::duration_cast<chrono::milliseconds>(endTime - startTime);
         cout << "4 probe measurement took: " << elapsed.count() << " milliseconds" << endl;
         cout << "Received " << x << " measurements." << endl;
+		
+		startTime = chrono::steady_clock::now();
+		ClientContext ctx2;
+		FourProbeRequest request2;
+        FourProbeRaw data2;
+		measurementReader = client.m_Stub->StreamFourProbeMeasurement(&ctx2, request2);
+        x=0;
+        cout << "First Four Probe Results: "  << endl;
+        while (measurementReader->Read(&data2))
+        {
+            if (++x <= 10)
+            {
+                cout << "  -V:" << data2.negvoltage() << " +V:" << data2.posvoltage() << " -C" << data2.negcurrent() << " +C" << data2.poscurrent() << " Z:" << data2.impedance() << endl;
+            }
+        }
+        endTime = chrono::steady_clock::now();
+        elapsed = chrono::duration_cast<chrono::milliseconds>(endTime - startTime);
+        cout << "4 probe measurement took: " << elapsed.count() << " milliseconds" << endl;
+        cout << "Received " << x << " measurements." << endl;
     }
 }
